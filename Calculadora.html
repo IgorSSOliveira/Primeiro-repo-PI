@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador financeiro</title>
+</head>
+<style>
+    body {
+        background-color: black;
+    }
+</style>
+
+<body>
+
+    <p><img src="C:\Users\Master\Downloads\LogoDataTech.PNG" alt=""></p>
+
+    <h2 style="color: rgb(184, 98, 218);">CALCULADORA DE DESEMPENHO FINANCEIRO</h2>
+
+    <h4 style="color: rgb(184, 98, 218);"> Calcule o desempenho financeiro da sua organização
+        caso o projeto STUD seja implementado
+    </h4>
+
+    <br>
+
+    <h3 style="color: rgb(184, 98, 218);">
+        <p>
+            Insira o valor total de prejuízo
+            para cada um dos últimos 3 meses.
+        </p>
+    </h3>
+
+    <p style="color: rgb(184, 98, 218);">Prejuizo em R$ (ou BRL) do Mês 1:&nbsp;<input id="input_Pmes1" type="number">
+    </p>
+    <p style="color: rgb(184, 98, 218);"> Prejuizo em R$ (ou BRL) do Mês 2:&nbsp;<input id="input_Pmes2" type="number">
+    </p>
+    <p style="color: rgb(184, 98, 218);">Prejuizo em R$ (ou BRL) do Mês 3:&nbsp;<input id="input_Pmes3" type="number">
+    </p>
+
+    <br><br>
+
+    <h3 style="color: rgb(184, 98, 218);">
+        <p>
+            Insira o valor total de lucro
+            para cada um dos últimos 3 meses.
+        </p>
+    </h3>
+
+    <p style="color: rgb(184, 98, 218);">Lucro em R$ (ou BRL) do Mês 1:&nbsp;<input id="input_Lmes1" type="number"></p>
+    <p style="color: rgb(184, 98, 218);">Lucro em R$ (ou BRL) do Mês 2:&nbsp;<input id="input_Lmes2" type="number"></p>
+    <p style="color: rgb(184, 98, 218);">Lucro em R$ (ou BRL) do Mês 3:&nbsp;<input id="input_Lmes3" type="number"></p>
+
+    <div id="div_mensagem"></div>
+    <div id="div_mudanca"></div>
+
+    <button onclick="iniciar()"> Realizar análise mensal </button>
+</body>
+
+</html>
+
+<script>
+    function iniciar() {
+
+        var prejuMes1 = Number(input_Pmes1.value);
+        var prejuMes2 = Number(input_Pmes2.value);
+        var prejuMes3 = Number(input_Pmes3.value);
+        var lucroMes1 = Number(input_Lmes1.value);
+        var lucroMes2 = Number(input_Lmes2.value);
+        var lucroMes3 = Number(input_Lmes3.value);
+        var mensagem = div_mensagem;
+        var mudanca = div_mudanca;
+
+        var medialucro = (lucroMes1 + lucroMes2 + lucroMes3) / 3;
+        var mediaprejuizo = (prejuMes1 + prejuMes2 + prejuMes3) / 3;
+
+        var reducao = mediaprejuizo * 0.25;
+        var novoprejuizo = mediaprejuizo - reducao;
+
+        var lucroRestante = medialucro - mediaprejuizo;
+        var pctLucroRest = (lucroRestante / medialucro) * 100;
+
+        var lucroRestanteComProj = medialucro - novoprejuizo;
+        var pctLucroRestComProj = (lucroRestanteComProj / medialucro) * 100;
+
+        mensagem.innerHTML = `
+        <p style="color: rgb(184, 98, 218);">
+            Sua empresa apresenta os seguintes resultados:<br>
+            Média de lucro mensal: <span style="color: rgb(137, 137, 255);">R$${medialucro.toFixed(2)}</span><br>
+            Média de prejuízo mensal: <span style="color: rgb(137, 137, 255);">R$${mediaprejuizo.toFixed(2)}</span><br>
+            Percentual de Lucro: <span style="color: rgb(137, 137, 255);">${pctLucroRest.toFixed(2)}%</span>
+        </p>`;
+
+        if (pctLucroRest <= 0) {
+            mensagem.innerHTML += `<p style="color:red;"> Sem lucro (Prejuizo). A margem de prejuizo é de ${pctLucroRest.toFixed(2)}%.</p>`;
+        } else if (pctLucroRest >= 1 && pctLucroRest < 15) {
+            mensagem.innerHTML += `<p style="color:orange;">Lucro abaixo do Normal. A margem de lucro é de ${pctLucroRest.toFixed(2)}%.</p>`;
+        } else if (pctLucroRest >= 15 && pctLucroRest < 30) {
+            mensagem.innerHTML += `<p style="color:yellow;">Lucro normal (Média da Indústria). A margem de lucro é de ${pctLucroRest.toFixed(2)}%.</p>`;
+        } else if (pctLucroRest >= 30 && pctLucroRest < 50) {
+            mensagem.innerHTML += `<p style="color:lightgreen;">Lucro acima do Normal. A margem de lucro é de ${pctLucroRest.toFixed(2)}%.</p>`;
+        } else if (pctLucroRest >= 50) {
+            mensagem.innerHTML += `<p style="color:green;">Lucro muito Acima do Normal. A margem de lucro é de ${pctLucroRest.toFixed(2)}%.</p>`;
+        }
+
+        mudanca.innerHTML = `
+        <p style="color: rgb(184, 98, 218);">
+            Se sua empresa implementar o projeto STUD, ocorrerá uma redução de 25% no prejuízo.<br>
+            Média de prejuízo mensal: <span style="color: rgb(137, 137, 255);">R$${novoprejuizo.toFixed(2)}</span><br>
+            Percentual de Lucro após o projeto: <span style="color: rgb(137, 137, 255);">${pctLucroRestComProj.toFixed(2)}%</span>
+        </p>`;
+
+        if (pctLucroRestComProj <= 0) {
+            mudanca.innerHTML += `<h3 style="color:red;">Sem lucro (Prejuízo). Mesmo com a implementação do projeto, a margem de prejuizo é de ${pctLucroRestComProj.toFixed(2)}%.</h3>`;
+        } else if (pctLucroRestComProj >= 1 && pctLucroRestComProj < 15) {
+            mudanca.innerHTML += `<h3 style="color:orange;">Lucro abaixo do Normal. Mesmo com a implementação do projeto, a margem de lucro é de ${pctLucroRestComProj.toFixed(2)}%.</h3>`;
+        } else if (pctLucroRestComProj >= 15 && pctLucroRestComProj < 30) {
+            mudanca.innerHTML += `<h3 style="color:yellow;">Lucro normal (Média da Indústria). Com a implementação do projeto, a margem de lucro é de ${pctLucroRestComProj.toFixed(2)}%.</h3>`;
+        } else if (pctLucroRestComProj >= 30 && pctLucroRestComProj < 50) {
+            mudanca.innerHTML += `<h3 style="color:lightgreen;">Lucro acima do Normal. Com a implementação do projeto, a margem de lucro é de ${pctLucroRestComProj.toFixed(2)}%.</h3>`;
+        } else if (pctLucroRestComProj >= 50) {
+            mudanca.innerHTML += `<h3 style="color:green;">Lucro muito Acima do Normal. Com a implementação do projeto, a margem de lucro é de ${pctLucroRestComProj.toFixed(2)}%.</h3>`;
+        }
+    }
+</script>
